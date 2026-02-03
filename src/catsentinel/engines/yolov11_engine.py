@@ -92,17 +92,15 @@ class YOLOv11Engine(InferenceEngine):
         # Load model
         self._model = YOLO(str(model_path))
         
-        # Move to device and set precision
+        # Move to device (half precision is handled in predict())
         self._model.to(self.device)
-        if self.half_precision:
-            self._model.model.half()
         
         # Cache class names
         self._class_names = self._model.names
         
-        # Warmup inference
+        # Warmup inference (use half precision if enabled)
         dummy_input = np.zeros((640, 640, 3), dtype=np.uint8)
-        self._model.predict(dummy_input, verbose=False)
+        self._model.predict(dummy_input, verbose=False, half=self.half_precision)
         
         self._is_loaded = True
     
@@ -130,6 +128,7 @@ class YOLOv11Engine(InferenceEngine):
             frame,
             conf=self.confidence_threshold,
             verbose=False,
+            half=self.half_precision,
             classes=self._get_target_class_ids()
         )
         inference_time = (time.perf_counter() - t1) * 1000

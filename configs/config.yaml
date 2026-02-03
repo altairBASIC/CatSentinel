@@ -1,6 +1,6 @@
 # Camera/Video Source Configuration
 camera:
-  source: 0                    # Camera index or video file path
+  source: 0                    # Camera index (0) or video file path
   width: 1280                  # Frame width
   height: 720                  # Frame height
   fps: 30                      # Target FPS
