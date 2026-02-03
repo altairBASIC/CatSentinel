@@ -1,0 +1,54 @@
+# Camera/Video Source Configuration
+camera:
+  source: 0                    # Camera index or video file path
+  width: 1280                  # Frame width
+  height: 720                  # Frame height
+  fps: 30                      # Target FPS
+
+# Detection Engine Configuration
+detection:
+  engine: "yolov11"            # Engine type: yolov11 (future: yolov26)
+  model_path: "models/yolo11n.pt"  # Path to model weights
+  confidence_threshold: 0.5   # Minimum detection confidence
+  target_classes:             # Classes to detect
+    - "cat"
+  device: "cuda"              # Inference device: cuda or cpu
+  half_precision: true        # Use FP16 for faster inference
+  
+  # Region of Interest (optional)
+  roi:
+    enabled: false
+    x: 100
+    y: 100
+    width: 800
+    height: 400
+
+# Notification Configuration
+notifications:
+  enabled: true
+  cooldown_seconds: 30        # Minimum time between alerts
+
+  telegram:
+    enabled: false            # Enable Telegram notifications
+    # Credentials loaded from environment variables:
+    # TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
+    send_photo: true          # Include detection frame in alert
+
+  webhook:
+    enabled: false            # Enable webhook notifications
+    url: ""                   # Webhook endpoint URL
+    # Optional headers loaded from WEBHOOK_SECRET env var
+
+# Benchmarking Configuration
+benchmarking:
+  enabled: true
+  log_interval: 100           # Log metrics every N frames
+  save_results: true          # Save benchmark results to file
+  results_dir: "benchmarks"   # Directory for benchmark reports
+
+# Display Configuration
+display:
+  show_preview: true          # Show video preview window
+  draw_boxes: true            # Draw detection bounding boxes
+  draw_fps: true              # Show FPS counter
+  window_name: "CatSentinel"  # Preview window title

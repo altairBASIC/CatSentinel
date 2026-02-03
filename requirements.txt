@@ -1,0 +1,20 @@
+# Core dependencies
+ultralytics>=8.0.0          # YOLO inference (supports v8, v11)
+opencv-python>=4.8.0        # Video capture and processing
+numpy>=1.24.0               # Array operations
+
+# GPU monitoring
+pynvml>=11.5.0              # NVIDIA VRAM monitoring
+
+# Async HTTP for notifications
+aiohttp>=3.9.0              # Async Telegram/Webhook requests
+
+# Configuration
+pyyaml>=6.0                 # YAML config parsing
+python-dotenv>=1.0.0        # .env file loading (optional)
+
+# Development dependencies
+pytest>=7.4.0               # Testing framework
+pytest-asyncio>=0.21.0      # Async test support
+black>=23.0.0               # Code formatting
+ruff>=0.1.0                 # Linting
