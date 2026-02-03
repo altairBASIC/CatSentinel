@@ -4,7 +4,7 @@ Real-time cat detection system designed for benchmarking YOLO inference performa
 
 ## Overview
 
-CatSentinel is a modular computer vision framework that detects cats in video streams while providing detailed performance metrics. Built with extensibility in mind, it uses the Strategy Pattern to allow seamless comparison between different YOLO versions (v11, v26, and future releases) on hardware like the NVIDIA GTX 1080.
+CatSentinel is a modular computer vision framework that detects cats in video streams while providing detailed performance metrics. Built with extensibility in mind, it uses the Strategy Pattern to allow seamless comparison between different YOLO versions (v11, v26, and future releases) on legacy hardware like the NVIDIA GTX 1080.
 
 ## Features
 
