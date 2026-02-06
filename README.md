@@ -1,10 +1,18 @@
 # CatSentinel
 
-Real-time cat detection system designed for benchmarking YOLO inference performance on legacy GPU hardware.
+Real-time cat detection system designed for benchmarking object detection models on legacy GPU hardware.
 
 ## Overview
 
-CatSentinel is a modular computer vision framework that detects cats in video streams while providing detailed performance metrics. Built with extensibility in mind, it uses the Strategy Pattern to allow seamless comparison between different YOLO versions (v11, v26, and future releases) on legacy hardware like the NVIDIA GTX 1080.
+CatSentinel is a modular computer vision framework that detects cats in video streams while providing detailed performance metrics. Built with extensibility in mind, it uses the Strategy Pattern to allow seamless comparison between different detection models on hardware like the NVIDIA GTX 1080.
+
+### Supported Models
+
+| Engine | Framework | Models | Architecture |
+|--------|-----------|--------|-------------|
+| YOLOv11 | ultralytics | yolo11n, yolo11s | CNN (baseline) |
+| YOLOv26 | ultralytics | yolo26n, yolo26s | CNN, NMS-free |
+| RF-DETR | rfdetr | nano, small | Transformer (DINOv2) |
 
 ## Features
 
@@ -19,19 +27,19 @@ CatSentinel is a modular computer vision framework that detects cats in video st
 
 ```
 catsentinel/
-├── engines/           # Inference engine implementations (Strategy Pattern)
-│   ├── base.py        # Abstract InferenceEngine class
-│   └── yolov11_engine.py
-├── benchmarking/      # Performance measurement utilities
-│   ├── decorators.py  # Timing decorators
-│   └── metrics.py     # VRAM monitoring via pynvml
-├── notifications/     # Async alert system
-│   ├── telegram.py    # Telegram bot integration
-│   └── webhook.py     # Generic webhook sender
-├── capture/           # Video source abstraction
-├── detection/         # Detection pipeline orchestrator
-├── utils/             # Configuration and logging
-└── main.py            # Entry point with dependency injection
+├── engines/              # Inference engine implementations (Strategy Pattern)
+│   ├── base.py           # Abstract InferenceEngine class
+│   ├── yolov11_engine.py # YOLOv11 (ultralytics)
+│   ├── yolov26_engine.py # YOLOv26 (ultralytics, NMS-free)
+│   └── rfdetr_engine.py  # RF-DETR (transformer-based)
+├── benchmarking/         # Performance measurement utilities
+│   ├── decorators.py     # Timing decorators
+│   └── metrics.py        # VRAM monitoring via pynvml
+├── notifications/        # Async alert system
+├── capture/              # Video source abstraction
+├── detection/            # Detection pipeline orchestrator
+├── utils/                # Configuration and logging
+└── main.py               # Entry point with dependency injection
 ```
 
 ## Requirements
@@ -106,40 +114,60 @@ python -m catsentinel.main --no-preview
 
 - `q` - Quit application
 
-## Adding New Engines
-
-To add support for a new YOLO version (e.g., YOLOv26):
-
-1. Create `src/catsentinel/engines/yolov26_engine.py`
-2. Inherit from `InferenceEngine` base class
-3. Implement required methods: `load_model()`, `predict()`, `get_engine_info()`
-4. Register in the engine factory (`main.py`)
+## Using Different Engines
 
 ```python
-from .base import InferenceEngine, InferenceResult
+from catsentinel.engines import YOLOv11Engine, YOLOv26Engine, RFDETREngine
 
-class YOLOv26Engine(InferenceEngine):
-    @property
-    def model_name(self) -> str:
-        return "YOLOv26"
-    
-    def load_model(self) -> None:
-        # Load model implementation
-        pass
-    
-    def predict(self, frame) -> InferenceResult:
-        # Inference implementation
-        pass
-    
-    def get_engine_info(self) -> EngineInfo:
-        # Return engine metadata
-        pass
+# YOLOv11 (baseline)
+engine = YOLOv11Engine(model_path="yolo11n.pt", confidence_threshold=0.5)
+
+# YOLOv26 (NMS-free, edge-optimized)
+engine = YOLOv26Engine(model_path="yolo26n.pt", confidence_threshold=0.5)
+
+# RF-DETR (transformer-based)
+engine = RFDETREngine(model_size="nano", confidence_threshold=0.5)
+
+# Use any engine with the same interface
+with engine:
+    result = engine.predict(frame)
+    print(f"Detections: {len(result.detections)}, Time: {result.inference_time_ms:.2f}ms")
 ```
 
 ## Benchmarking
 
-///// In construction /////
+> **Status**: _In development_ - benchmark results coming soon!
 
+CatSentinel automatically collects performance metrics:
+
+- **Inference Time**: Pure model inference in milliseconds
+- **FPS**: Frames processed per second  
+- **VRAM Usage**: GPU memory consumption via pynvml
+
+### Engine Comparison (GTX 1080)
+
+| Engine | Model | Avg Inference | FPS | VRAM Peak |
+|--------|-------|---------------|-----|----------|
+| YOLOv11 | yolo11n | ~8ms | ~118 | ~1GB |
+| YOLOv26 | yolo26n | TBD | TBD | TBD |
+| RF-DETR | nano | TBD | TBD | TBD |
+
+> **Note**: RF-DETR uses transformers (DINOv2 backbone) which are more memory-intensive. On 8GB GPUs, use Nano/Small variants.
+
+Metrics are logged periodically and summarized at exit:
+
+```
+============================================================
+BENCHMARK RESULTS
+============================================================
+  engine: YOLOv11Engine
+  model: yolo11n.pt
+  frames: 1000
+  avg_inference_ms: 8.45
+  avg_fps: 118.34
+  vram_peak_mb: 1024.0
+============================================================
+```
 
 ## Project Structure
 
