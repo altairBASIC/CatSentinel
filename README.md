@@ -138,26 +138,8 @@ class YOLOv26Engine(InferenceEngine):
 
 ## Benchmarking
 
-CatSentinel automatically collects performance metrics:
+///// In construction /////
 
-- **Inference Time**: Pure model inference in milliseconds
-- **FPS**: Frames processed per second
-- **VRAM Usage**: GPU memory consumption via pynvml
-
-Metrics are logged periodically (configurable interval) and summarized at exit:
-
-```
-============================================================
-BENCHMARK RESULTS
-============================================================
-  engine: YOLOv11Engine
-  model: yolo11n.pt
-  frames: 1000
-  avg_inference_ms: 8.45
-  avg_fps: 118.34
-  vram_peak_mb: 1024.0
-============================================================
-```
 
 ## Project Structure
 
