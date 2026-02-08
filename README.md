@@ -4,7 +4,7 @@ Real-time cat detection system designed for benchmarking object detection models
 
 ## Overview
 
-CatSentinel is a modular computer vision framework that detects cats in video streams while providing detailed performance metrics. Built with extensibility in mind, it uses the Strategy Pattern to allow seamless comparison between different detection models on hardware like the NVIDIA GTX 1080.
+CatSentinel is a modular computer vision framework that detects cats in video streams while providing detailed performance metrics. Built with extensibility in mind, it uses the Strategy Pattern to allow seamless comparison between different detection models on hardware like the NVIDIA GTX 1080 (And more)
 
 ### Supported Models
 
